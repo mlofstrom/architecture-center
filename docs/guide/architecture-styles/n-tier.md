@@ -4,7 +4,7 @@ An N-tier architecture divides an application into **logical layers** and **phys
 
 ![](./images/n-tier-logical.svg)
 
-Layers are a way to separate responsibilities and manage dependencies. Each layer has a specific responsibility. A higher layer can use services in a lower layer, but not vice-versa. 
+Layers are a way to separate responsibilities and manage dependencies. Each layer has a specific responsibility. A higher layer can use services in a lower layer, but not the other way around. 
 
 Tiers are physically separated, running on separate machines. A tier can call to another tier directly, or use asynchronous messaging (message queue). Although each layer might be hosted in its own tier, that's not required. Several layers might be hosted on the same tier. Physically separating the tiers improves scalability and resiliency, but also adds latency from the additional network communication. 
 
@@ -17,10 +17,9 @@ An N-tier application can have a **closed layer architecture** or an **open laye
 
 A closed layer architecture limits the dependencies between layers. However, it might create unnecessary network traffic, if one layer simply passes requests along to the next layer. 
 
-
 ## When to use this architecture
 
-N-tier architectures are typically implemented as IaaS applications, with each tier running on a separate set of VMs. However, an N-tier application doesn't need to be pure IaaS. Often, it's advantageous to use managed services for some parts of the architecture, particularly caching, messaging, and data storage.
+N-tier architectures are typically implemented as infrastructure-as-service (IaaS) applications, with each tier running on a separate set of VMs. However, an N-tier application doesn't need to be pure IaaS. Often, it's advantageous to use managed services for some parts of the architecture, particularly caching, messaging, and data storage.
 
 Consider an N-tier architecture for:
 
@@ -41,7 +40,7 @@ N-tier architectures are very common in traditional on-premises applications, so
 
 - It's easy to end up with a middle tier that just does CRUD operations on the database, adding extra latency without doing any useful work. 
 - Monolithic design prevents independent deployment of features.
-- Managing an IaaS application is more work than a pure PaaS application that uses only managed services. 
+- Managing an IaaS application is more work than an application that uses only managed services. 
 - It can be difficult to manage network security in a large system.
 
 ## N-tier architecture on virtual machines
@@ -50,15 +49,15 @@ This section describes a recommended N-tier architecture running on VMs.
 
 ![](./images/n-tier-physical.png)
 
-Each tier consists of two or more VMs, placed in an availability set or VM scale set. Multiple VMs provides resiliency in case one VM fails. Load balancers  are used to distribute requests across the VMs in a tier. A tier can be scaled horizontally by adding more VMs to the pool. 
+Each tier consists of two or more VMs, placed in an availability set or VM scale set. Multiple VMs provide resiliency in case one VM fails. Load balancers are used to distribute requests across the VMs in a tier. A tier can be scaled horizontally by adding more VMs to the pool. 
 
-Each tier is also placed inside its own subnet, meaning their internal IP addresses fall within the same address range. That makes it easy to apply NSG rules and route tables to individual tiers.
+Each tier is also placed inside its own subnet, meaning their internal IP addresses fall within the same address range. That makes it easy to apply network security group (NSG) rules and route tables to individual tiers.
 
-The web and business tiers are stateless. any VM can handle any request for that tier. The data tier should consist of a replicated database. For Windows, we recommend SQL Server, using Always On Availability Groups for high availability. For Linux, we recommend Apache Cassandra. (SQL Server for Linux is currently in preview) 
+The web and business tiers are stateless. Any VM can handle any request for that tier. The data tier should consist of a replicated database. For Windows, we recommend SQL Server, using Always On Availability Groups for high availability. For Linux, we recommend Apache Cassandra. (SQL Server for Linux is currently in preview) 
 
-Use network security groups (NSGs) to restrict access to each tier. For example, the database tier only allows access from the business tier.
+Use NSGs to restrict access to each tier. For example, the database tier only allows access from the business tier.
 
-Do not allow direct RDP or SSH access to VMs that are running application code. Instead, operators should log into a jumpbox, also called a bastion host. This is a  VM on the network that administrators use to connect to the other VMs. The jumpbox has an NSG that allows RDP or SSH only from whitelisted public IP addresses.
+Do not allow direct RDP or SSH access to VMs that are running application code. Instead, operators should log into a jumpbox, also called a bastion host. This is a  VM on the network that administrators use to connect to the other VMs. The jumpbox has an NSG that allows RDP or SSH only from approved public IP addresses.
 
 For more details and a deployable Resource Manager template, see:
 
@@ -69,7 +68,7 @@ For more details and a deployable Resource Manager template, see:
 
 - N-tier architectures are not restricted to three tiers. For more complex applications, it is common to have more tiers. In that case, consider using layer-7 routing to route requests to a particular tier.
 
-- Tiers are the boundary of scalability, reliability and security. Consider having separate tiers for services with different requirements in those areas.
+- Tiers are the boundary of scalability, reliability, and security. Consider having separate tiers for services with different requirements in those areas.
 
 - Look for places in the architecture where you can use a managed service without significant refactoring. In particular, look at caching, messaging, storage, and databases. 
 

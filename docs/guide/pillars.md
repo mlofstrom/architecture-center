@@ -57,9 +57,7 @@ Notice that 99% uptime could translate to an almost 2-hour service outage per we
 
 In Azure, the Service Level Agreement (SLA) describes Microsoft's commitments for uptime and connectivity. If the SLA for a particular service is 99.95%, it means you should expect the service to be available 99.95% of the time.
 
-Applications often use multiple services. In general, the probability of each service failing is independent, so the composite SLA 
-
-it is important to be aware of what that means to availability in terms of Service Level Agreements. For example, a three tier application may rely on three separate Azure services such as Websites, ServiceBus and Azure SQL, each of which has a different Service Level Agreement. For the purposes of example, assume all three services have a 99.9% SLA, their availability roughly equates to 45 minutes of downtime per month - that downtime is per service. This means that your potential composed SLA when using three separate Azure services in this manner could (as a worst case) be up to 135 minutes per month, since there is no guarantee that the failures occur across all three services simultaneously, becoming a combined SLA for those three services of 99.7%.
+Applications often depend on multiple services. In general, the probability of either service having downtime is independent. For example, suppose your application depends on two services, each with a 99.9% SLA. The composite SLA for both services is 99.9% &times; 99.9% &asymp; 99.8%, or slightly less than each service by itself. 
 
 Use the [Availability checklist][availability-checklist] to review your design from an availability standpoint.
 

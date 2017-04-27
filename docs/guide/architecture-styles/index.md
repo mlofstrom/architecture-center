@@ -2,7 +2,7 @@
 
 An *architecture style* is a family of architectures that share certain characteristics. For example, [N-tier][n-tier] is a common architecture style. More recently, [microservice architectures][microservices] have started to gain favor. 
 
-Architecture styles don't require the use of particular technologies, but some technologies well-suited for certain architectures. For example, containers are a natural fit for microservices.  
+Architecture styles don't require the use of particular technologies, but some technologies are well-suited for certain architectures. For example, containers are a natural fit for microservices.  
 
 ## A quick tour of the styles	
 
@@ -19,15 +19,15 @@ This section gives a quick tour of the architecture styles that we've identified
 
 **[N-tier][n-tier]** is a traditional architecture for enterprise applications. Dependencies are managed by dividing the application into *layers* that perform logical functions, such as presentation, business logic, and data access. A layer can only call into layers that sit below it. However, this horizontal layering can be a liability. It can be hard to introduce changes in one part of the application without touching the rest of the application. That makes frequent updates a challenge, limiting how quickly new features can be added.
 
-N-tier is a natural fit for migrating existing applications that already use a layered architecture. For that reason, N-tier is most often seen in IaaS solutions, or application that use a mix of IaaS and managed services. 
+N-tier is a natural fit for migrating existing applications that already use a layered architecture. For that reason, N-tier is most often seen in infrastructure as a service (IaaS) solutions, or application that use a mix of IaaS and managed services. 
 
 ### Web-Queue-Worker
 
 <img src="./images/web-queue-worker-sketch.svg" style="float:left; margin-top:6px;"/>
 
-For a purely PaaS solution, consider a **[Web-Queue-Worker](./web-queue-worker.md)** architecture. In this style, the application has a web front end that handles HTTP requests, and a back-end worker that performs CPU-intensive tasks or long-running operations. The front end communicates to the worker through an asynchronous message queue. 
+For a purely PaaS solution, consider a **[Web-Queue-Worker](./web-queue-worker.md)** architecture. In this style, the application has a web front end that handles HTTP requests and a back-end worker that performs CPU-intensive tasks or long-running operations. The front end communicates to the worker through an asynchronous message queue. 
 
-Web-queue-worker is suitable for relatively simple domains with some resource-intensive tasks. Like N-tier, the architecture is easy to understand. The use of managed services simplifies deployment and operations. But with a complex domains, it can be hard to manage dependencies. The front end and the worker can easily become large, monolithic components, which are hard to maintain and update. As with N-tier, this can reduce the frequency of updates and limit innovation.
+Web-queue-worker is suitable for relatively simple domains with some resource-intensive tasks. Like N-tier, the architecture is easy to understand. The use of managed services simplifies deployment and operations. But with a complex domains, it can be hard to manage dependencies. The front end and the worker can easily become large, monolithic components that are hard to maintain and update. As with N-tier, this can reduce the frequency of updates and limit innovation.
 
 ### Microservices
 
@@ -66,7 +66,7 @@ For example, the constraints in microservices include:
 
 - A service represents a single responsibility. 
 - Every service is independent of the others. 
-- Data is private to the service that owns it; services do not share data.
+- Data is private to the service that owns it. Services do not share data.
 
 By adhering to these constraints, what emerges is a system where services can be deployed independently, faults are isolated, frequent updates are possible, and it's easy to introduce new technologies into the application.
 
@@ -77,7 +77,7 @@ The following table summarizes how each style manages dependencies, and the type
 
 | Architecture style |	Dependency management | Domain type |
 |--------------------|------------------------|-------------|
-| N-Tier | Horizontal tiers divided by subnet | Traditional business domain. Frequency of updates is low. |
+| N-tier | Horizontal tiers divided by subnet | Traditional business domain. Frequency of updates is low. |
 | Web-Queue-Worker | Front and backend jobs, decoupled by async messaging. | Relatively simple domain with some resource intensive tasks. |
 | Microservices	| Vertically (functionally) decomposed services that call each other through APIs. | Complicated domain. Frequent updates. |
 | CQRS | Read/write segregation. Schema and scale are optimized separately. | Collaborative domain where lots of users access the same data. |
@@ -92,14 +92,15 @@ Constraints also create challenges, so it's important to understand the trade-of
 
 Here are some of the types of challenges to consider when selecting an architecture style:
 
-- Complexity. Is the complexity of the architecture justified for your domain? Conversely, is the style too simplistic for your domain? In that case, you risk ending up with a "ball of mud", because the architecture does not help you to manage dependencies cleanly.
+- Complexity. Is the complexity of the architecture justified for your domain? Conversely, is the style too simplistic for your domain? In that case, you risk ending up with a "[ball of mud][ball-of-mud]", because the architecture does not help you to manage dependencies cleanly.
 
-- Asynchronous messaging and eventual consistency. Asynchronous messaging can be used to decouple services, and increase reliability (because messages can be retried) and scalability. However, this also creates challenges such as always-once semantics, eventual consistency, 
+- Asynchronous messaging and eventual consistency. Asynchronous messaging can be used to decouple services, and increase reliability (because messages can be retried) and scalability. However, this also creates challenges such as always-once semantics and eventual consistency.
 
 - Inter-service communication. As you decompose an application into separate services, there is a risk that communication between services will cause unacceptable latency or create network congestion (for example, in a microservices architecture). 
 
 - Manageability. How hard is it to manage the application, monitor, deploy updates, and so on?
 
 
+[ball-of-mud]: https://en.wikipedia.org/wiki/Big_ball_of_mud
 [microservices]: ./microservices.md
 [n-tier]: ./n-tier.md

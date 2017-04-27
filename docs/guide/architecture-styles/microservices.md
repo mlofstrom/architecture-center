@@ -10,7 +10,7 @@ In some ways, microservices are the natural evolution of service oriented archit
 
 - Each service is a separate codebase, which can be managed by a small development team.
 
-- Services can be deployed independently. A team can update an existing service without re-building and redeploying the entire application.
+- Services can be deployed independently. A team can update an existing service without rebuilding and redeploying the entire application.
 
 - Services are responsible for persisting their own data or external state. This differs from the traditional model, where a separate data layer handles data persistence.
 
@@ -30,7 +30,7 @@ The advantages of using an API gateway include:
 
 - It decouples clients from services. Services can be versioned or refactored without needing to update all of the clients.
 
--  Services can use messaging protocols that are not web-friendly, such as AMQP.
+-  Services can use messaging protocols that are not web friendly, such as AMQP.
 
 - The API Gateway can perform other cross-cutting functions such as authentication, logging, SSL termination, and load balancing.
 
@@ -49,17 +49,17 @@ Consider this architectural style for:
 
 ## Benefits 
 
-- **Independent deployments**. You can update a service without re-deploying the entire application, and roll back or roll forward an update if something goes wrong. Bug fixes and feature releases are more manageable and less risky.
+- **Independent deployments**. You can update a service without redeploying the entire application, and roll back or roll forward an update if something goes wrong. Bug fixes and feature releases are more manageable and less risky.
 
 - **Independent development**. A single development team can build, test, and deploy a service. The result is continuous innovation and a faster release cadence. 
 
-- **Small, focused teams.** Teams can focus on one service. The smaller scope of each service makes the code base easier to understand and reason about. It's easier to ramp up.
+- **Small, focused teams**. Teams can focus on one service. The smaller scope of each service makes the code base easier to understand, and it's easier for new team members to ramp up.
 
 - **Fault isolation**. If a service goes down, it won't take out the entire application. However, that doesn't mean the microservices gives you resiliency for free. You still need to follow resiliency best practices and design patterns. See [Designing resilient applications for Azure][resiliency-overview].
 
 - **Mixed technology stacks**. Teams can pick the technology that best fits their service. 
 
-- **Granular scaling**. Services can be scaled independently. At the same time, the higher density of services per VM means that VM resources are fully utilized. Using placement constraints, a services can be matched to a VM profile (high CPU, high memory, etc).
+- **Granular scaling**. Services can be scaled independently. At the same time, the higher density of services per VM means that VM resources are fully utilized. Using placement constraints, a services can be matched to a VM profile (high CPU, high memory, and so on).
 
 ## Challenges
 
@@ -67,7 +67,7 @@ Consider this architectural style for:
 
 - **Development and test**. Developing against service dependencies requires a different approach. Existing tools are not necessarily designed to work with service dependencies. Refactoring across service boundaries can be difficult. It is also challenging to test service dependencies, especially when the application is evolving quickly.
 
-- **Lack of governance.** The decentralized approach to building microservices has advantages, but it can also lead to problems. You may end up with so many different languages and frameworks that the applications becomes hard to maintain. It may be useful to put some project-wide standards in place, without overly restricting teams' flexibility. This especially applies to cross-cutting functionality such as logging.
+- **Lack of governance**. The decentralized approach to building microservices has advantages, but it can also lead to problems. You may end up with so many different languages and frameworks that the application becomes hard to maintain. It may be useful to put some project-wide standards in place, without overly restricting teams' flexibility. This especially applies to cross-cutting functionality such as logging.
 
 - **Network congestion and latency**. The use of many small, granular services can result in more interservice communication. Also, if the chain of service dependencies gets too long (service A calls B, which calls C...), the additional latency can become a problem. You will need to design APIs carefully. Avoid overly chatty APIs, think about serialization formats, and look for places to use asynchronous communication patterns.
 
@@ -103,15 +103,15 @@ You can use Azure Container Service to configure and provision a Docker cluster.
 
 ![](./images/microservices-acs.png)
  
-**Public nodes** are reachable through a public-facing load balancer. The API gateway is hosted on these nodes.
+**Public nodes**. These nodes are reachable through a public-facing load balancer. The API gateway is hosted on these nodes.
 
-**Backend nodes** run services that clients reach via the API gateway. These nodes don't receive Internet traffic directly. The backend nodes might include more than one pool of VMs, each with a different hardware profile. For example, you could create separate pools for general compute workloads, high CPU workloads, and high memory workloads. 
+**Backend nodes**. These nodes run services that clients reach via the API gateway. These nodes don't receive Internet traffic directly. The backend nodes might include more than one pool of VMs, each with a different hardware profile. For example, you could create separate pools for general compute workloads, high CPU workloads, and high memory workloads. 
 
-**Management VMs** run the master nodes for the container orchestrator. 
+**Management VMs**. These VMs run the master nodes for the container orchestrator. 
 
 **Networking**. The public nodes, backend nodes, and management VMs are placed in separate subnets within the same virtual network (VNet). 
 
-**Load balancers**.  An externally facing load balancer sits in front of the public nodes. It distributes internet requests to the public nodes. Another load balancer is placed in front of the management VMs, to allow ssh traffic to the management VMs, using NAT rules. 
+**Load balancers**.  An externally facing load balancer sits in front of the public nodes. It distributes internet requests to the public nodes. Another load balancer is placed in front of the management VMs, to allow secure shell (ssh) traffic to the management VMs, using NAT rules.
 
 For reliability and scalability, each service is replicated across multiple VMs. However, because services are also relatively lightweight (compared with a monolithic application), multiple services are usually packed into a single VM. Higher density allows better resource utilization. If a particular service doesn't use a lot of resources, you don't need to dedicate an entire VM to running that service.
 

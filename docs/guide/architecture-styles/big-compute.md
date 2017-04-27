@@ -1,10 +1,10 @@
 # Big Compute architecture style
 
-The term Big Compute describes large scale workloads that require a large number of cores, often numbering in the hundreds or thousands. Scenarios include image rendering, fluid dynamics, financial risk modeling, oil exploration, drug design, and engineering stress analysis, among others.
+The term big compute describes large scale workloads that require a large number of cores, often numbering in the hundreds or thousands. Scenarios include image rendering, fluid dynamics, financial risk modeling, oil exploration, drug design, and engineering stress analysis, among others.
 
 ![](./images/big-compute-logical.png)
 
-Here are some typical characteristics of Big Compute applications:
+Here are some typical characteristics of big compute applications:
 
 - The work can be split into discrete tasks, which can be run across many cores simultaneously.
 - Each task is finite. It takes some input, does some processing, and produces output. The entire application runs for a finite amount of time (minutes to days). A common pattern is to provision a large number of cores in a burst, and then spin down to zero once the application completes. 
@@ -34,7 +34,7 @@ Here are some typical characteristics of Big Compute applications:
 - Provisioning thousands of cores in a timely manner.
 - For tightly coupled tasks, adding more cores can have diminishing returns. You may need to experiment to find the optimum number of cores.
 
-## Big Compute using Azure Batch
+## Big compute using Azure Batch
 
 [Azure Batch][batch] is a managed service for running large-scale high-performance computing (HPC) applications.
 
@@ -42,7 +42,7 @@ Using Azure Batch, you configure a VM pool, and upload the applications and data
 
 ![](./images/big-compute-batch.png) 
 
-## Big Compute running on IaaS
+## Big compute running on Virtual Machines
 
 You can use [Microsoft HPC Pack][hpc-pack] to administer a cluster of VMs, and schedule and monitor HPC jobs. With this approach, you must provision and manage the VMs and network infrastructure. Consider this approach if you have existing HPC workloads and want to move some or all it to Azure. You can move the entire HPC cluster to Azure, or keep your HPC cluster on-premises but use Azure for burst capacity. For more information, see [Batch and HPC solutions for large-scale computing workloads][batch-hpc-solutions].
 
@@ -52,7 +52,7 @@ In this scenario, the HPC cluster is created entirely within Azure.
 
 ![](./images/big-compute-iaas.png) 
  
-The head node provides management and job scheduling services to the cluster.  For tightly coupled tasks, use an RDMA network which provides very high bandwidth, low latency communication between VMs. For more information see Deploy an HPC Pack 2016 cluster in Azure.
+The head node provides management and job scheduling services to the cluster. For tightly coupled tasks, use an RDMA network that provides very high bandwidth, low latency communication between VMs. For more information see [Deploy an HPC Pack 2016 cluster in Azure][deploy-hpc-azure].
 
 ### Burst an HPC cluster to Azure
 
@@ -63,6 +63,7 @@ In this scenario, an organization is running HPC Pack on-premises, and uses Azur
 
 [batch]: /azure/batch/
 [batch-hpc-solutions]: /azure/batch/batch-hpc-solutions
+[deploy-hpc-azure]: /azure/virtual-machines/windows/hpcpack-2016-cluster
 [embarrassingly-parallel]: https://en.wikipedia.org/wiki/Embarrassingly_parallel
 [hpc-pack]: https://technet.microsoft.com/library/cc514029
 

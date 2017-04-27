@@ -14,17 +14,17 @@ Other components that are commonly incorporated into this architecture include:
 
 The web and worker are both stateless. Session state can be stored in a distributed cache. Any long-running work is done asynchronously by the worker. The worker can be triggered by messages on the queue, or run on a schedule for batch processing. The worker is an optional component. If there are no long-running operations, the worker can be omitted.  
 
-The front end might consist of a web API. On the client side, the web API can be consumed by a single page application (SPA) that makes AJAX calls, or by a native client application.
+The front end might consist of a web API. On the client side, the web API can be consumed by a single-page application that makes AJAX calls, or by a native client application.
 
 ## When to use this architecture
 
-The web-queue-worker architecture is typically implemented using managed compute services, either Azure App Service or Azure Cloud Services. 
+The Web-Queue-Worker architecture is typically implemented using managed compute services, either Azure App Service or Azure Cloud Services. 
 
 Consider this architectural style for:
 
-- Applications with a relatively simple domain 
+- Applications with a relatively simple domain .
 - Applications with some long-running workflows or batch operations.
-- When you want to use managed services, rather than IaaS.
+- When you want to use managed services, rather than infrastructure as a service (IaaS).
 
 
 ## Benefits:
@@ -40,24 +40,23 @@ Consider this architectural style for:
 - Without careful design, the front end and the worker can become large, monolithic components that are difficult to maintain and update.
 - There may be hidden dependencies, if the front end and worker share data schemas or code modules. 
 
-## Web-queue-worker on Azure App Service
+## Web-Queue-Worker on Azure App Service
 
-This section describes a recommended web-queue-worker architecture that uses Azure App Service. 
+This section describes a recommended Web-Queue-Worker architecture that uses Azure App Service. 
 
 ![](./images/web-queue-worker-physical.png)
 
-The front end is implemented as an Azure App Service web app, and the worker is implemented as a WebJob. The web app and the WebJob are both associated with an App Service plan, which provides the VM instances. 
+The front end is implemented as an Azure App Service web app, and the worker is implemented as a WebJob. The web app and the WebJob are both associated with an App Service plan that provides the VM instances. 
 
 You can use either Azure Service Bus or Azure Storage queues for the message queue. (The diagram shows an Azure Storage queue.)
 
 Azure Redis Cache stores session state and other data that needs low latency access.
 
-Azure CDN is used to cache static content such as images, CSS, HTML.
+Azure CDN is used to cache static content such as images, CSS, or HTML.
 
 For storage, choose the storage technologies that best fit the needs of the application. You might use multiple storage technologies (polyglot persistence). To illustrate this idea, the diagram shows Azure SQL Database and DocumentDB.  
 
 For more details, see [Managed web application reference architecture][scalable-web-app].
-
 
 ### Additional considerations
 
