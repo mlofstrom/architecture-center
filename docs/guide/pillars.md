@@ -57,6 +57,10 @@ Notice that 99% uptime could translate to an almost 2-hour service outage per we
 
 In Azure, the Service Level Agreement (SLA) describes Microsoft's commitments for uptime and connectivity. If the SLA for a particular service is 99.95%, it means you should expect the service to be available 99.95% of the time.
 
+Applications often use multiple services. In general, the probability of each service failing is independent, so the composite SLA 
+
+it is important to be aware of what that means to availability in terms of Service Level Agreements. For example, a three tier application may rely on three separate Azure services such as Websites, ServiceBus and Azure SQL, each of which has a different Service Level Agreement. For the purposes of example, assume all three services have a 99.9% SLA, their availability roughly equates to 45 minutes of downtime per month - that downtime is per service. This means that your potential composed SLA when using three separate Azure services in this manner could (as a worst case) be up to 135 minutes per month, since there is no guarantee that the failures occur across all three services simultaneously, becoming a combined SLA for those three services of 99.7%.
+
 Use the [Availability checklist][availability-checklist] to review your design from an availability standpoint.
 
 ### Availability guidance
@@ -79,7 +83,7 @@ All of these factors mean that cloud applications must be designed to expect occ
 
 - Azure Storage, SQL Database, and DocumentDB all provide built-in data replication, both within a region and across regions.
 - Azure Managed Disks are automatically placed in different storage scale units, to limit the effects of hardware failures.
-- VMs in an availability set are grouped into fault domains that share a common power source and network switch. This limits the impact of physical hardware failures, network outages, or power interruptions.
+- VMs in an availability set are spread across several fault domains. A fault domain is a group of VMs that share a common power source and network switch. Spreading VMs across fault domains limits the impact of physical hardware failures, network outages, or power interruptions.
 
 That said, you still need to build resiliency your application. Resiliency strategies can be applied at all levels of the architecture. Some mitigations are more tactical in nature &mdash; for example, retrying a remote call after a transient network failure. Other mitigations are more strategic, such as failing over the entire application to a secondary region. Tactical mitigations can make a big difference. While it's rare for an entire region to experience a disruption, transient problems such as network congestion are more common &mdash; so target these first. Having the right monitoring and diagnostics is also important, both to detect failures when they happen, and to find the root causes.
 
@@ -138,7 +142,7 @@ In general, the security best practices for application development still apply 
 
 Cloud applications often use managed services that have access keys. Never check these into source control. Consider storing application secrets in Azure Key Vault.
 
-### Data integrity and encryption
+### Data sovereignty and encryption
 
 Make sure that your data remains in the correct geopolitical zone when using Azure's highly available. Azure's geo-replicated storage uses the concept of a [paired region][paired-region] in the same geopolitical region. 
 

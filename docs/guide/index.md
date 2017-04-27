@@ -7,7 +7,7 @@ layout: LandingPage
 
 This guide presents a structured approach for designing applications on Azure that are scalable, resilient, and highly available. It is based on proven practices that we have learned from customer engagements.
 
-<object data="./images/guide-steps.svg" type="image/svg+xml"></object>
+![](./images/guide-steps.svg)
 
 The cloud is changing the way applications are designed. Instead of monoliths, applications are decomposed into smaller, decentralized services. These services communicate through APIs or by using asynchronous messaging or eventing. Applications scale horizontally, adding new instances as demand requires. 
 
