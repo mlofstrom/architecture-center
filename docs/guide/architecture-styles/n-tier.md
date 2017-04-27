@@ -2,7 +2,7 @@
 
 An N-tier architecture divides an application into **logical layers** and **physical tiers**. 
 
-![](./images/n-tier-logical.svg)
+![](./images/n-tier-logical.png)
 
 Layers are a way to separate responsibilities and manage dependencies. Each layer has a specific responsibility. A higher layer can use services in a lower layer, but not the other way around. 
 
@@ -43,6 +43,14 @@ N-tier architectures are very common in traditional on-premises applications, so
 - Managing an IaaS application is more work than an application that uses only managed services. 
 - It can be difficult to manage network security in a large system.
 
+## Best practices
+
+- Use asynchronous messaging to decouple tiers.
+
+- Cache semi-static data.
+
+- Autoscale to handle changes in load.
+
 ## N-tier architecture on virtual machines
 
 This section describes a recommended N-tier architecture running on VMs. 
@@ -55,9 +63,7 @@ Each tier is also placed inside its own subnet, meaning their internal IP addres
 
 The web and business tiers are stateless. Any VM can handle any request for that tier. The data tier should consist of a replicated database. For Windows, we recommend SQL Server, using Always On Availability Groups for high availability. For Linux, we recommend Apache Cassandra. (SQL Server for Linux is currently in preview) 
 
-Use NSGs to restrict access to each tier. For example, the database tier only allows access from the business tier.
-
-Do not allow direct RDP or SSH access to VMs that are running application code. Instead, operators should log into a jumpbox, also called a bastion host. This is a  VM on the network that administrators use to connect to the other VMs. The jumpbox has an NSG that allows RDP or SSH only from approved public IP addresses.
+Network Security Groups (NSGs) restrict access to each tier. For example, the database tier only allows access from the business tier.
 
 For more details and a deployable Resource Manager template, see:
 
@@ -70,11 +76,15 @@ For more details and a deployable Resource Manager template, see:
 
 - Tiers are the boundary of scalability, reliability, and security. Consider having separate tiers for services with different requirements in those areas.
 
+- Use VM Scale Sets for autoscaling.
+
 - Look for places in the architecture where you can use a managed service without significant refactoring. In particular, look at caching, messaging, storage, and databases. 
 
-- For high security, place a network in front of the application. The DMZ includes network virtual appliances (NVAs) that implement security functionality such as firewalls and packet inspection. For more information, see [Network DMZ][dmz].
+- For higher security, place a network DMZ in front of the application. The DMZ includes network virtual appliances (NVAs) that implement security functionality such as firewalls and packet inspection. For more information, see [Network DMZ][dmz].
 
 - For high availability, place two or more NVAs in an availability set, with an external load balancer to distribute Internet requests across the instances. For more information, see [Deploy highly available network virtual appliances][ha-nva].
+
+- Do not allow direct RDP or SSH access to VMs that are running application code. Instead, operators should log into a jumpbox, also called a bastion host. This is a  VM on the network that administrators use to connect to the other VMs. The jumpbox has an NSG that allows RDP or SSH only from approved public IP addresses.
 
 - You can extend the Azure virtual network to your on-premises network using a site-to-site virtual private network (VPN) or Azure ExpressRoute. For more information, see [Hybrid network][hybrid-network].
 
